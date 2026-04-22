@@ -108,8 +108,10 @@
 </main>
 
 <script>
-    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSs_mhwS-Op3r7iDRB3UZutQc8m5_oe5uDUqHzwbLOmHcsOm6uPtm_nYVQgwb9t1tjIWZ2waAnRlTJA/pub?output=csv'; // <--- PEGA TU LINK CSV AQUÍ
-
+    // Tu link de Google Sheets ahora está cifrado
+    const CODED_LINK = 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlNzX21od1MtT3AzcjdpRFJCM1VadXRRYzhtNV9vZTV1RFVxSHp3YkxPbUhjc09tNnVQdG1fbllWUWd3Yjl0MXRqSVdaMndhQW5SbFRKQS9wdWI/b3V0cHV0PWNzdg=='; 
+    const SHEET_CSV = atob(CODED_LINK); // Esto decodifica el link solo cuando la página carga
+    
     let inventory = [];
 
     async function loadInventory() {
