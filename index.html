@@ -12,73 +12,77 @@
             --rojo-claro: #fff1f2; 
             --borde-rojo: #fecdd3; 
         }
-        body { background-color: #fcfcfc; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #334155; }
+        body { background-color: #fcfcfc; font-family: 'Inter', sans-serif; color: #334155; }
         
         .header-app { background: white; padding: 2rem 0; border-bottom: 1px solid #f1f5f9; }
-        .brand-title { font-weight: 900; letter-spacing: -1.5px; color: var(--primario); font-size: 2.5rem; text-align: center; }
+        .brand-title { font-weight: 900; letter-spacing: -1.5px; color: var(--primario); font-size: 2.2rem; text-align: center; }
         
         .search-container { max-width: 900px; margin: -25px auto 40px auto; }
         .search-bar { 
             border-radius: 15px; 
             border: 1px solid #e2e8f0; 
-            padding: 18px 25px; 
+            padding: 16px 25px; 
             font-size: 1.1rem; 
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-            transition: 0.3s;
         }
-        .search-bar:focus { border-color: var(--accent); box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.15); outline: none; }
 
-        /* Estilo de Listado Horizontal Espacioso */
+        /* Cabecera de listado */
         .list-header { 
             display: flex; 
             padding: 10px 30px; 
-            font-size: 0.75rem; 
+            font-size: 0.7rem; 
             font-weight: 800; 
             text-transform: uppercase; 
             color: #94a3b8; 
             letter-spacing: 1px;
         }
 
+        /* Fila de producto */
         .item-row { 
             background: white; 
             border-radius: 10px; 
-            padding: 20px 30px; 
+            padding: 15px 30px; 
             margin-bottom: 8px; 
             border: 1px solid #f1f5f9;
             display: flex;
             align-items: center;
-            transition: all 0.2s ease;
+            transition: 0.2s;
         }
-        .item-row:hover { border-color: #e2e8f0; background: #fafafa; }
+        .item-row:hover { border-color: #cbd5e1; background: #fafafa; }
 
-        /* Sin Stock: Rojo claro minimalista */
-        .no-stock { 
-            background-color: var(--rojo-claro) !important; 
-            border-color: var(--borde-rojo) !important; 
+        .no-stock { background-color: var(--rojo-claro) !important; border-color: var(--borde-rojo) !important; }
+
+        /* Columnas */
+        .col-id { flex: 2.5; }      /* Código y Nombre */
+        .col-desc { flex: 4; padding: 0 20px; } 
+        .col-stock { flex: 1.5; text-align: center; }
+        .col-price { flex: 1.5; text-align: right; }
+
+        /* Estilo Discreto para el Código */
+        .product-sku { 
+            display: block; 
+            font-size: 0.65rem; 
+            color: #94a3b8; 
+            font-family: monospace;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
 
-        /* Columnas del Listado */
-        .col-main { flex: 3; }      /* Nombre y Marca */
-        .col-desc { flex: 4; padding: 0 20px; } /* Descripción técnica */
-        .col-stock { flex: 1.5; text-align: center; } /* Cantidad */
-        .col-price { flex: 1.5; text-align: right; } /* Precio */
-
-        .item-name { font-weight: 700; font-size: 1.1rem; color: #1e293b; display: block; }
-        .item-brand { font-size: 0.65rem; text-transform: uppercase; color: var(--accent); font-weight: 800; }
-        .item-desc { font-size: 0.9rem; color: #64748b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-name { font-weight: 700; font-size: 1.05rem; color: #1e293b; line-height: 1.2; }
+        .item-brand { font-size: 0.6rem; text-transform: uppercase; color: var(--accent); font-weight: 800; display: block; margin-bottom: 2px; }
+        .item-desc { font-size: 0.85rem; color: #64748b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .stock-label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+        .stock-label { font-size: 0.8rem; font-weight: 600; }
         .stock-out { color: #be123c; font-weight: 800; }
         
-        .price-text { font-size: 1.25rem; font-weight: 800; color: #0f172a; }
+        .price-text { font-size: 1.2rem; font-weight: 800; color: #0f172a; }
 
-        /* Adaptabilidad (Responsive) */
         @media (max-width: 992px) {
             .list-header { display: none; }
-            .item-row { flex-direction: column; text-align: center; padding: 25px; }
-            .col-desc { padding: 15px 0; width: 100%; border-top: 1px solid #f1f5f9; margin-top: 10px; }
+            .item-row { flex-direction: column; text-align: center; padding: 20px; }
+            .col-desc { padding: 10px 0; width: 100%; border-top: 1px solid #f1f5f9; margin: 10px 0; }
+            .col-price { text-align: center; width: 100%; }
             .item-desc { white-space: normal; }
-            .col-price { width: 100%; margin-top: 10px; }
         }
     </style>
 </head>
@@ -87,31 +91,28 @@
 <header class="header-app mb-5">
     <div class="container">
         <h1 class="brand-title">FULL CELL CALAMA</h1>
-        <p class="text-center text-muted small fw-bold">LISTADO TÉCNICO DE INVENTARIO</p>
+        <p class="text-center text-muted small fw-bold">LISTADO DE INVENTARIO PRIVADO</p>
     </div>
 </header>
 
 <div class="container search-container">
-    <input type="text" id="searchInput" class="form-control search-bar" placeholder="🔍 Buscar por modelo (ej: iP 11), marca o repuesto...">
+    <input type="text" id="searchInput" class="form-control search-bar" placeholder="Buscar por código, repuesto o descripción...">
 </div>
 
 <main class="container mb-5">
     <div class="list-header d-none d-lg-flex">
-        <div style="flex: 3;">Producto / Marca</div>
+        <div style="flex: 2.5;">Producto / Código</div>
         <div style="flex: 4; padding-left: 20px;">Detalle Técnico</div>
-        <div style="flex: 1.5; text-align: center;">Stock</div>
-        <div style="flex: 1.5; text-align: right;">Precio</div>
+        <div style="flex: 1.5; text-align: center;">Disponibilidad</div>
+        <div style="flex: 1.5; text-align: right;">Precio Neto</div>
     </div>
 
-    <div id="inventoryList">
-        </div>
+    <div id="inventoryList"></div>
 </main>
 
 <script>
-    // Tu link de Google Sheets ahora está cifrado
-    const CODED_LINK = 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlNzX21od1MtT3AzcjdpRFJCM1VadXRRYzhtNV9vZTV1RFVxSHp3YkxPbUhjc09tNnVQdG1fbllWUWd3Yjl0MXRqSVdaMndhQW5SbFRKQS9wdWI/b3V0cHV0PWNzdg=='; 
-    const SHEET_CSV = atob(CODED_LINK); // Esto decodifica el link solo cuando la página carga
-    
+    const SHEET_CSV = 'TU_LINK_DE_GOOGLE_SHEETS_AQUI'; // <--- TU LINK CSV
+
     let inventory = [];
 
     async function loadInventory() {
@@ -123,43 +124,38 @@
             inventory = rows.map(row => {
                 const c = row.split(',');
                 return {
-                    nombre: c[0],
-                    precio: c[1],
-                    desc: c[2],
-                    marca: c[3],
-                    stock: parseInt(c[4]) || 0
+                    codigo: c[0],
+                    nombre: c[1],
+                    precio: c[2],
+                    desc: c[3],
+                    marca: c[4],
+                    stock: parseInt(c[5]) || 0
                 };
-            }).filter(item => item.nombre && item.nombre.trim() !== "");
+            }).filter(item => item.nombre);
 
             render(inventory);
-        } catch (e) {
-            console.error("Error cargando inventario:", e);
-        }
+        } catch (e) { console.error("Error:", e); }
     }
 
     function render(list) {
         const container = document.getElementById('inventoryList');
-        if (list.length === 0) {
-            container.innerHTML = `<div class="text-center py-5 text-muted">No hay resultados para su búsqueda</div>`;
-            return;
-        }
-
         container.innerHTML = list.map(item => {
             const hasStock = item.stock > 0;
             return `
                 <div class="item-row ${!hasStock ? 'no-stock' : ''}">
-                    <div class="col-main">
+                    <div class="col-id">
                         <span class="item-brand">${item.marca || 'GENÉRICO'}</span>
                         <span class="item-name">${item.nombre}</span>
+                        <span class="product-sku">REF: ${item.codigo || 'S/N'}</span>
                     </div>
 
                     <div class="col-desc">
-                        <p class="item-desc">${item.desc || '-'}</p>
+                        <p class="item-desc" title="${item.desc}">${item.desc || '-'}</p>
                     </div>
 
                     <div class="col-stock">
                         <span class="stock-label ${!hasStock ? 'stock-out' : ''}">
-                            ${hasStock ? item.stock + ' UNID' : 'AGOTADO'}
+                            ${hasStock ? item.stock + ' U' : 'SIN STOCK'}
                         </span>
                     </div>
 
@@ -175,7 +171,7 @@
         const term = e.target.value.toLowerCase();
         const filtered = inventory.filter(i => 
             i.nombre.toLowerCase().includes(term) || 
-            i.marca.toLowerCase().includes(term) ||
+            i.codigo.toLowerCase().includes(term) ||
             i.desc.toLowerCase().includes(term)
         );
         render(filtered);
