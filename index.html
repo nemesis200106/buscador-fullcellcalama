@@ -3,166 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario - FULL CELL CALAMA</title>
+    <title>Inventario Navideño - FULL CELL CALAMA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
     <style>
         :root { 
-            --primario: #0f172a; 
-            --accent: #0284c7;
-            --fondo: #f8fafc;
-            --borde: #e2e8f0;
+            /* --- NUEVOS COLORES NAVIDEÑOS --- */
+            --primario: #b91c1c; /* Rojo rico de Navidad para títulos */
+            --accent: #166534; /* Verde pino festivo para detalles */
+            --gold: #fde68a; /* Dorado para bordes y acentos cálidos */
+            --fondo: #fffaf0; /* Fondo marfil crema, más cálido */
+            --ice-blue: #e0f2f1; /* Tono de fondo para el gradiente de nieve */
         }
-        body { background-color: var(--fondo); font-family: 'Inter', system-ui, sans-serif; color: #334155; margin: 0; padding: 0;}
+        body { background: linear-gradient(135deg, var(--fondo) 0%, var(--ice-blue) 100%); font-family: 'Inter', system-ui, sans-serif; color: #334155; margin: 0; padding: 0;}
         
-        /* Encabezado Principal */
-        .header-app { background: white; padding: 1.5rem 0; border-bottom: 1px solid var(--borde); }
-        .brand-title { font-weight: 900; letter-spacing: -1px; color: var(--primario); font-size: 2rem; text-align: center; margin-bottom: 0;}
-        .subtitle { font-size: 0.75rem; text-align: center; color: #64748b; font-weight: 700; letter-spacing: 1px; margin-top: 2px;}
+        /* Encabezado Principal - Más festivo */
+        .header-app { background: transparent; padding: 2rem 0; text-align: center; border-bottom: none; }
+        .brand-title { font-weight: 900; letter-spacing: -1.5px; color: var(--primario); font-size: 2.5rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .brand-title span { font-size: 1.5rem; } /* Escala el emoji🎅 */
+        .subtitle { font-size: 0.8rem; color: #7f1d1d; font-weight: 700; letter-spacing: 1.5px; margin-top: 5px; text-transform: uppercase; }
         
-        /* Barra de Búsqueda Flotante */
+        /* --- BARRA DE BÚSQUEDA FLOTANTE - CON TOQUE DE NIEVE Y DORADO --- */
         .sticky-search-wrapper {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(248, 250, 252, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            background: rgba(255, 250, 240, 0.9); /* Fondo crema semitransparente */
+            backdrop-filter: blur(12px); /* Efecto cristal para que se vea moderno y helado */
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(253, 230, 138, 0.7); /* Borde dorado suave */
+            box-shadow: 0 10px 15px -3px rgba(185, 28, 28, 0.15); /* Sombras rojas suaves */
+            margin-bottom: 25px;
         }
 
         .search-container { max-width: 900px; margin: 0 auto; padding: 0 15px; }
         .search-bar { 
-            border-radius: 10px; 
-            border: 2px solid var(--borde); 
-            padding: 12px 20px; 
-            font-size: 1rem; 
+            border-radius: 12px; 
+            border: 2px solid #fdba74; /* Borde ámbar cálido */
+            padding: 16px 25px; 
+            font-size: 1.1rem; 
             width: 100%;
-            transition: 0.2s;
+            transition: 0.3s;
             background: white;
         }
-        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); outline: none; }
+        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(22, 101, 52, 0.1); outline: none; } /* Focus verde festivo */
 
-        /* Cabecera de listado (Solo PC) */
+        /* Cabecera de listado - Con iconos navideños */
         .list-header { 
             display: flex; 
-            padding: 8px 20px; 
-            font-size: 0.7rem; 
+            padding: 10px 30px; 
+            font-size: 0.75rem; 
             font-weight: 800; 
             text-transform: uppercase; 
-            color: #94a3b8; 
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--borde);
-            margin-bottom: 10px;
+            color: #7f1d1d; /* Texto rojo oscuro */
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid #fdba74;
+            margin-bottom: 15px;
+            align-items: center;
+            gap: 5px;
         }
+        .list-header-icon { font-size: 0.9rem; color: #fdba74; }
 
-        /* Fila de producto */
+        /* Fila de producto - Con sombras navideñas */
         .item-row { 
             background: white; 
-            border-radius: 8px; 
-            padding: 15px 20px; 
-            margin-bottom: 8px; 
-            border: 1px solid var(--borde);
+            border-radius: 10px; 
+            padding: 18px 30px; 
+            margin-bottom: 12px; 
+            border: 1px solid #fde68a; /* Borde dorado claro */
             display: flex;
             align-items: center;
-            transition: 0.15s;
+            transition: all 0.2s ease;
         }
-        .item-row:hover { border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+        .item-row:hover { border-color: var(--accent); box-shadow: 0 4px 6px -1px rgba(22, 101, 52, 0.1); } /* Hover verde festivo */
 
-        /* Estados de Stock */
-        .no-stock { background-color: #fff1f2 !important; border-color: #fecdd3 !important; opacity: 0.9;}
-        .badge-agotado { background: #e11d48; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
-        .badge-stock { background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
-
-        /* Sistema de Columnas Base (PC) */
-        .col-main { flex: 2.5; }
-        .col-desc { flex: 4; padding: 0 15px; } 
-        .col-footer { flex: 3; display: flex; align-items: center; } /* Contiene Stock y Precio */
-        .col-stock { flex: 1; text-align: center; }
-        .col-price { flex: 1; text-align: right; }
-
-        /* Tipografía e Identificadores (Más intuitivo) */
-        .badge-brand { 
-            background: #e0f2fe; color: #0369a1; 
-            font-size: 0.65rem; font-weight: 800; 
-            padding: 2px 6px; border-radius: 4px; 
-            text-transform: uppercase; margin-right: 5px;
+        /* Sin Stock - Con rojo claro minimalista y copo de nieve */
+        .no-stock { 
+            background-color: #fff1f2 !important; 
+            border-color: #fecdd3 !important; 
         }
-        .product-sku { font-size: 0.65rem; color: #64748b; font-family: monospace; font-weight: 600;}
-        .item-name { font-weight: 800; font-size: 1.05rem; color: #0f172a; display: block; line-height: 1.2; margin-top: 4px; }
-        .item-desc { font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.3; }
-        .price-text { font-size: 1.25rem; font-weight: 900; color: #0f172a; }
 
-        .status-msg { text-align: center; padding: 30px; font-size: 1rem; color: #64748b; font-weight: 500;}
+        /* Sistema de Columnas */
+        .col-id { flex: 2.5; }
+        .col-desc { flex: 4; padding: 0 20px; } 
+        .col-stock { flex: 1.5; text-align: center; }
+        .col-price { flex: 1.5; text-align: right; }
 
-        /* --- OPTIMIZACIÓN PARA MÓVILES Y TABLETS --- */
+        /* Tipografía Interna - Con toques verdes y rojos */
+        .item-name { font-weight: 800; font-size: 1.15rem; color: #1e293b; display: block; line-height: 1.2; }
+        .product-sku { font-size: 0.7rem; color: #64748b; font-family: monospace; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px;}
+        .item-brand { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); font-weight: 700; display: block; margin-bottom: 2px; }
+        .item-brand-icon { font-size: 0.8rem; color: #d97706; margin-right: 5px; } /* Icono de regalo/oro */
+        .item-desc { font-size: 0.95rem; color: #475569; margin: 0; line-height: 1.4; }
+        
+        /* Etiquetas de Stock - En tonos oro y frosty */
+        .stock-label { font-size: 0.9rem; font-weight: 700; color: #0f172a; }
+        .stock-out { color: #be123c; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .stock-out-icon { font-size: 1.1rem; color: #be123c; } /* Copo de nieve roto */
+        
+        /* Precio - En rojo festivo */
+        .price-text { font-size: 1.4rem; font-weight: 900; color: var(--primario); }
+
+        /* Loader y Mensajes */
+        .status-msg { text-align: center; padding: 40px; font-size: 1.2rem; color: #64748b; }
+        .error-msg { color: #dc2626; font-weight: bold; background: #fee2e2; padding: 20px; border-radius: 10px; }
+
+        /* Adaptabilidad (Responsive) - Mantiene la estructura pero con colores navideños */
         @media (max-width: 992px) {
-            .header-app { padding: 1rem 0; }
-            .brand-title { font-size: 1.6rem; }
-            .sticky-search-wrapper { padding: 10px 0; margin-bottom: 15px; }
-            .search-bar { padding: 10px 15px; font-size: 0.95rem; }
-            
             .list-header { display: none; }
-            
-            /* Tarjeta más compacta */
-            .item-row { flex-direction: column; align-items: flex-start; padding: 12px 15px; gap: 6px; }
-            .col-main { width: 100%; }
-            .col-desc { width: 100%; padding: 0; }
-            .item-name { font-size: 0.95rem; } /* Nombre ligeramente más pequeño */
-            .item-desc { font-size: 0.8rem; }
-            
-            /* Fila inferior: Stock y Precio alineados e intuitivos */
-            .col-footer { 
-                width: 100%; 
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                border-top: 1px solid var(--borde); 
-                padding-top: 8px; 
-                margin-top: 4px; 
-            }
-            .col-stock, .col-price { text-align: left; }
-            .col-price { text-align: right; }
-            .price-text { font-size: 1.2rem; color: var(--accent); } /* Destaca el precio en azul oscuro en móvil */
+            .item-row { flex-direction: column; text-align: left; padding: 20px; gap: 10px; border-radius: 8px; border: 1px solid #fdba74; }
+            .col-desc { padding: 15px 0; width: 100%; border-top: 1px dashed #fdba74; border-bottom: 1px dashed #fdba74; }
+            .item-desc { white-space: normal; }
+            .col-stock, .col-price { text-align: left; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+            .col-price::before { content: "Precio NETO:"; font-size: 0.8rem; color: var(--accent); font-weight: bold; }
+            .col-stock::before { content: "Stock:"; font-size: 0.8rem; color: var(--accent); font-weight: bold; }
         }
     </style>
 </head>
 <body>
 
-<header class="header-app">
-    <div class="container">
-        <h1 class="brand-title">FULL CELL CALAMA</h1>
-        <p class="subtitle mb-0">SISTEMA DE INVENTARIO TÉCNICO</p>
+<header class="header-app mb-5">
+    <div class="container text-center">
+        <h1 class="brand-title">🎅 FULL CELL CALAMA 🎁</h1>
+        <p class="subtitle mb-0">SISTEMA DE INVENTARIO TÉCNICO - EDICIÓN NAVIDEÑA</p>
     </div>
 </header>
 
 <div class="sticky-search-wrapper">
     <div class="container search-container">
-        <input type="text" id="searchInput" class="form-control search-bar shadow-sm" placeholder="🔍 Buscar código, repuesto o marca..." autocomplete="off">
+        <input type="text" id="searchInput" class="form-control search-bar shadow-sm" placeholder="🔍 Buscar por código, repuesto, marca o falla..." autocomplete="off">
     </div>
 </div>
 
-<main class="container mb-5" style="max-width: 1000px;">
+<main class="container mb-5">
     <div class="list-header d-none d-lg-flex">
-        <div class="col-main">Modelo / Referencia</div>
-        <div class="col-desc">Detalle Técnico</div>
-        <div class="col-footer">
-            <div class="col-stock">Disponibilidad</div>
-            <div class="col-price">Precio Neto</div>
-        </div>
+        <div class="col-id"><span class="list-header-icon">🎄</span> Producto / Ref</div>
+        <div class="col-desc"><span class="list-header-icon">❄️</span> Especificaciones</div>
+        <div class="col-stock"><span class="list-header-icon">🎁</span> Estado Stock</div>
+        <div class="col-price"><span class="list-header-icon">✨</span> Precio NETO</div>
     </div>
 
     <div id="inventoryList">
-        <div class="status-msg">⏳ Sincronizando datos...</div>
+        <div class="status-msg">⏳ Sincronizando con la base de datos navideña...</div>
     </div>
 </main>
 
 <script>
-    // Tu enlace intacto
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSs_mhwS-Op3r7iDRB3UZutQc8m5_oe5uDUqHzwbLOmHcsOm6uPtm_nYVQgwb9t1tjIWZ2waAnRlTJA/pub?output=csv'; 
 
     let inventory = [];
@@ -189,7 +177,8 @@
                 render(inventory);
             },
             error: function(error) {
-                document.getElementById('inventoryList').innerHTML = `<div class="status-msg" style="color: red;">❌ Error leyendo el archivo.</div>`;
+                console.error("Error cargando inventario:", error);
+                document.getElementById('inventoryList').innerHTML = `<div class="status-msg error-msg">❌ Error leyendo la base de datos. Revisa el enlace del CSV o tu conexión.</div>`;
             }
         });
     }
@@ -197,7 +186,7 @@
     function render(list) {
         const container = document.getElementById('inventoryList');
         if (list.length === 0) {
-            container.innerHTML = `<div class="status-msg">No se encontraron artículos con esa búsqueda.</div>`;
+            container.innerHTML = `<div class="status-msg">No se encontraron repuestos navideños con esa descripción.</div>`;
             return;
         }
 
@@ -205,35 +194,31 @@
             const hasStock = item.stock > 0;
             return `
                 <div class="item-row ${!hasStock ? 'no-stock' : ''}">
-                    
-                    <div class="col-main">
-                        <div style="display: flex; align-items: center; margin-bottom: 2px;">
-                            ${item.marca ? `<span class="badge-brand">${item.marca}</span>` : ''}
-                            <span class="product-sku">REF: ${item.codigo}</span>
-                        </div>
+                    <div class="col-id">
+                        ${item.marca ? `<span class="item-brand"><span class="item-brand-icon">🎁</span> ${item.marca}</span>` : ''}
                         <span class="item-name">${item.nombre}</span>
+                        <span class="product-sku">REF: ${item.codigo}</span>
                     </div>
 
                     <div class="col-desc">
                         <p class="item-desc">${item.desc}</p>
                     </div>
 
-                    <div class="col-footer">
-                        <div class="col-stock">
-                            <span class="${hasStock ? 'badge-stock' : 'badge-agotado'}">
-                                ${hasStock ? item.stock + ' UNID' : 'AGOTADO'}
-                            </span>
-                        </div>
-                        <div class="col-price">
-                            <span class="price-text">${item.precio}</span>
-                        </div>
+                    <div class="col-stock">
+                        <span class="stock-label ${!hasStock ? 'stock-out' : ''}">
+                            ${hasStock ? item.stock + ' UNIDADES' : '<span class="stock-out-icon">❄️</span> AGOTADO'}
+                        </span>
                     </div>
 
+                    <div class="col-price">
+                        <span class="price-text">${item.precio}</span>
+                    </div>
                 </div>
             `;
         }).join('');
     }
 
+    // Buscador en tiempo real
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase().trim();
         const filtered = inventory.filter(i => 
@@ -245,6 +230,7 @@
         render(filtered);
     });
 
+    // Iniciar carga
     loadInventory();
 </script>
 
