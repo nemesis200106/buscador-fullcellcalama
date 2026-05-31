@@ -9,19 +9,34 @@
     
     <style>
         :root { 
-            /* Paleta Formal y Profesional */
+            /* PALETA MODO CLARO (Por defecto) */
             --bg-body: #f1f5f9;
             --bg-card: #ffffff;
             --text-main: #0f172a;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
             --border-color: #e2e8f0;
+            --bg-search-bar: rgba(241, 245, 249, 0.95);
+            --bg-ref: #f1f5f9;
             
-            /* Acentos Ejecutivos */
+            /* Acentos Ejecutivos (Se mantienen en ambos modos) */
             --accent-blue: #0284c7;
             --stock-in: #059669;
             --stock-low: #d97706;
             --stock-out: #dc2626;
+        }
+
+        /* PALETA MODO OSCURO (Se activa con el botón) */
+        [data-theme="dark"] {
+            --bg-body: #0f172a;          /* Fondo muy oscuro */
+            --bg-card: #1e293b;          /* Tarjetas azul oscuro */
+            --text-main: #f8fafc;        /* Texto blanco brillante */
+            --text-secondary: #cbd5e1;   /* Texto gris claro */
+            --text-muted: #64748b;       /* Texto gris oscuro */
+            --border-color: #334155;     /* Bordes sutiles oscuros */
+            --bg-search-bar: rgba(15, 23, 42, 0.95);
+            --bg-ref: #334155;
+            --accent-blue: #38bdf8;      /* Azul más claro para resaltar en oscuro */
         }
         
         body { 
@@ -31,15 +46,42 @@
             margin: 0; 
             padding: 0;
             min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave de tema */
         }
         
+        /* --- BOTÓN CAMBIO DE TEMA --- */
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 30px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+        .theme-toggle:hover {
+            border-color: var(--text-muted);
+        }
+
         /* --- ENCABEZADO FORMAL --- */
         .header-pro { 
+            position: relative; /* Para que el botón de tema se posicione bien */
             background-color: var(--bg-card);
             padding: 2.5rem 0 1.5rem 0; 
             text-align: center; 
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .header-title { 
             font-weight: 800; 
@@ -58,7 +100,7 @@
             gap: 12px;
         }
 
-        /* Marcador de Local (Controlado por Sheet) */
+        /* Marcador de Local */
         .store-badge {
             padding: 3px 10px;
             border-radius: 4px;
@@ -71,9 +113,9 @@
             text-transform: uppercase;
             border: 1px solid transparent;
         }
-        .store-open { background: #ecfdf5; color: var(--stock-in); border-color: #a7f3d0; }
+        .store-open { background: rgba(5, 150, 105, 0.1); color: var(--stock-in); border-color: rgba(5, 150, 105, 0.2); }
         .store-open::before { content: ''; width: 6px; height: 6px; background: var(--stock-in); border-radius: 50%; }
-        .store-closed { background: #fef2f2; color: var(--stock-out); border-color: #fecaca; }
+        .store-closed { background: rgba(220, 38, 38, 0.1); color: var(--stock-out); border-color: rgba(220, 38, 38, 0.2); }
         .store-closed::before { content: ''; width: 6px; height: 6px; background: var(--stock-out); border-radius: 50%; }
         
         /* --- BARRA DE BÚSQUEDA --- */
@@ -81,11 +123,12 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(241, 245, 249, 0.95);
+            background: var(--bg-search-bar);
             backdrop-filter: blur(8px);
             padding: 15px 0;
             border-bottom: 1px solid var(--border-color);
             margin-bottom: 25px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .search-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
@@ -118,24 +161,23 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid var(--border-color);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             gap: 20px;
         }
         .item-card:hover { 
-            border-color: #cbd5e1; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+            border-color: var(--text-muted); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
         }
-        .row-empty { opacity: 0.7; background: #f8fafc; }
+        .row-empty { opacity: 0.6; }
 
         /* Columna Izquierda: Información Técnica */
         .info-col { flex: 1; display: flex; flex-direction: column; }
         
-        /* Marca (Discreta y Pequeña) */
         .brand-badge {
             align-self: flex-start;
             font-size: 0.65rem;
             color: var(--text-secondary);
-            background: #f8fafc;
+            background: var(--bg-body);
             border: 1px solid var(--border-color);
             padding: 2px 8px;
             border-radius: 4px;
@@ -145,7 +187,6 @@
             margin-bottom: 8px;
         }
 
-        /* Tipo de Repuesto */
         .type-text {
             font-size: 0.8rem;
             color: var(--accent-blue);
@@ -155,7 +196,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Apartado Modelo / Referencia */
         .tech-details {
             display: flex;
             flex-direction: column;
@@ -173,7 +213,7 @@
             font-weight: 600;
             margin-right: 6px;
             display: inline-block;
-            width: 75px; /* Alineación perfecta */
+            width: 75px; 
         }
         .model-value {
             font-weight: 700;
@@ -183,7 +223,7 @@
             font-family: monospace;
             font-weight: 600;
             color: var(--text-secondary);
-            background: #f1f5f9;
+            background: var(--bg-ref);
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 0.85rem;
@@ -223,22 +263,11 @@
 
         /* --- MÓVILES --- */
         @media (max-width: 768px) {
-            .header-pro { padding: 1.5rem 0 1rem 0; }
-            .header-title { font-size: 1.8rem; }
-            .item-card { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                padding: 16px; 
-                gap: 16px; 
-            }
-            .meta-col { 
-                width: 100%; 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center; 
-                border-top: 1px solid var(--border-color); 
-                padding-top: 12px; 
-            }
+            .theme-toggle { top: 10px; right: 10px; padding: 4px 8px; font-size: 0.7rem; }
+            .header-pro { padding: 2rem 0 1rem 0; }
+            .header-title { font-size: 1.8rem; margin-top: 15px; }
+            .item-card { flex-direction: column; align-items: flex-start; padding: 16px; gap: 16px; }
+            .meta-col { width: 100%; flex-direction: row; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 12px; }
             .price-display { font-size: 1.4rem; }
         }
     </style>
@@ -246,6 +275,11 @@
 <body>
 
 <header class="header-pro">
+    <!-- NUEVO: Botón de Cambio de Tema -->
+    <button id="themeToggle" class="theme-toggle">
+        🌙 Oscuro
+    </button>
+
     <div class="container">
         <h1 class="header-title">FULL CELL</h1>
         <div class="header-address">
@@ -268,11 +302,35 @@
 </main>
 
 <script>
+    // --- LÓGICA DE CAMBIO DE TEMA ---
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    // Revisar si el usuario ya tenía una preferencia guardada
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggleBtn.innerHTML = '☀️ Claro';
+    }
+
+    // Evento al hacer clic en el botón
+    themeToggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            themeToggleBtn.innerHTML = '🌙 Oscuro';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggleBtn.innerHTML = '☀️ Claro';
+        }
+    });
+
+    // --- LÓGICA DE INVENTARIO (INTACTA) ---
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSs_mhwS-Op3r7iDRB3UZutQc8m5_oe5uDUqHzwbLOmHcsOm6uPtm_nYVQgwb9t1tjIWZ2waAnRlTJA/pub?output=csv'; 
 
     let inventoryData = [];
 
-    // LÓGICA DE EXTRACCIÓN (Tipo y Modelo separados)
     function parseProductStructure(nombreBruto) {
         if (!nombreBruto) return { tipo: 'REPUESTO', modelo: 'Desconocido' };
         const parts = nombreBruto.trim().split(' ');
@@ -281,7 +339,6 @@
         return { tipo, modelo: modelo || nombreBruto };
     }
 
-    // LÓGICA DE STOCK PROFESIONAL
     function getFormalStock(qty) {
         if (qty === 0) return { class: 'stock-zero', text: 'Sin Stock' };
         if (qty <= 3) return { class: 'stock-med', text: `Stock Bajo: ${qty}` };
@@ -296,8 +353,7 @@
             complete: function(results) {
                 const filas = results.data;
                 
-                // --- LECTURA DE ESTADO DEL LOCAL (Columna H, Fila 1 del Excel) ---
-                // filas[0] es la fila 1, y [7] es la columna H (A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7)
+                // LECTURA DE ESTADO DEL LOCAL (Columna H, Fila 1)
                 if(filas[0] && filas[0][7]) {
                     const statusVal = filas[0][7].toUpperCase().trim();
                     const statusBadge = document.getElementById('globalStoreStatus');
@@ -310,12 +366,12 @@
                     } else {
                         statusBadge.className = 'store-badge store-closed';
                         statusBadge.innerText = 'Cerrado';
-                        statusBadge.innerText = 'cerrado';
                         statusBadge.innerText = 'CERRADO';
+                        statusBadge.innerText = 'cerrado';
                     }
                 }
 
-                // Procesar Inventario (Omitimos la primera fila que son encabezados)
+                // Procesar Inventario
                 inventoryData = filas.slice(1).map(c => {
                     return {
                         codigo: c[0] ? c[0].trim() : 'N/A',
@@ -326,7 +382,7 @@
                     };
                 }).filter(item => item.nombreRaw !== '');
 
-                // ORDENAR: Por Nombre de Repuesto (Alfabético)
+                // ORDENAR
                 inventoryData.sort((a, b) => a.nombreRaw.localeCompare(b.nombreRaw));
 
                 renderLayout(inventoryData);
@@ -351,15 +407,11 @@
 
             return `
                 <div class="item-card ${isEmptyClass}">
-                    
-                    <!-- COLUMNA IZQUIERDA: Info Técnica -->
                     <div class="info-col">
-                        <!-- Marca Discreta (Solo si existe) -->
                         ${item.marca ? `<div class="brand-badge">${item.marca}</div>` : ''}
                         
                         <div class="type-text">${structure.tipo}</div>
                         
-                        <!-- Apartado Específico Modelo / Referencia -->
                         <div class="tech-details">
                             <div class="detail-row">
                                 <span class="detail-label">Modelo:</span>
@@ -372,20 +424,17 @@
                         </div>
                     </div>
 
-                    <!-- COLUMNA DERECHA: Precio y Stock -->
                     <div class="meta-col">
                         <div class="price-display">${item.precio}</div>
                         <div class="stock-indicator ${stockInfo.class}">
                             ${stockInfo.text}
                         </div>
                     </div>
-
                 </div>
             `;
         }).join('');
     }
 
-    // Buscador
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase().trim();
         const filtered = inventoryData.filter(i => 
