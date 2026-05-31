@@ -3,234 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario Fiestas Patrias - FULL CELL CALAMA</title>
+    <title>Inventario Corporativo - FULL CELL</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
     <style>
         :root { 
-            /* --- COLORES FIESTAS PATRIAS 🇨🇱 --- */
-            --chile-azul: #0033a0; /* Azul bandera */
-            --chile-rojo: #da291c; /* Rojo bandera */
-            --fondo: #f8fafc;
-            --borde: #e2e8f0;
+            /* Paleta Formal y Profesional */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            
+            /* Acentos Ejecutivos */
+            --accent-blue: #0284c7;
+            --stock-in: #059669;
+            --stock-low: #d97706;
+            --stock-out: #dc2626;
         }
-        body { background-color: var(--fondo); font-family: 'Inter', system-ui, sans-serif; color: #334155; margin: 0; padding: 0;}
         
-        /* Encabezado Principal Dieciochero */
-        .header-app { 
-            background: white; 
-            padding: 1.8rem 0; 
-            border-bottom: 4px solid var(--chile-rojo); /* Línea roja inferior tipo bandera */
-            border-top: 4px solid var(--chile-azul);    /* Línea azul superior */
+        body { 
+            background-color: var(--bg-body);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 0;
+            min-height: 100vh;
         }
-        .brand-title { font-weight: 900; letter-spacing: -1px; color: var(--chile-azul); font-size: 2.2rem; text-align: center; margin-bottom: 0;}
-        .subtitle { font-size: 0.8rem; text-align: center; color: var(--chile-rojo); font-weight: 800; letter-spacing: 1.5px; margin-top: 4px;}
         
-        /* Barra de Búsqueda Flotante */
-        .sticky-search-wrapper {
+        /* --- ENCABEZADO FORMAL --- */
+        .header-pro { 
+            background-color: var(--bg-card);
+            padding: 2.5rem 0 1.5rem 0; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .header-title { 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+            color: var(--text-main); 
+            font-size: 2.2rem; 
+            margin-bottom: 5px;
+        }
+        .header-address { 
+            font-size: 0.85rem; 
+            color: var(--text-secondary); 
+            font-weight: 600; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* Marcador de Local (Controlado por Sheet) */
+        .store-badge {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+        .store-open { background: #ecfdf5; color: var(--stock-in); border-color: #a7f3d0; }
+        .store-open::before { content: ''; width: 6px; height: 6px; background: var(--stock-in); border-radius: 50%; }
+        .store-closed { background: #fef2f2; color: var(--stock-out); border-color: #fecaca; }
+        .store-closed::before { content: ''; width: 6px; height: 6px; background: var(--stock-out); border-radius: 50%; }
+        
+        /* --- BARRA DE BÚSQUEDA --- */
+        .sticky-search {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(248, 250, 252, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(218, 41, 28, 0.2); /* Sombra roja sutil */
-            box-shadow: 0 4px 10px -2px rgba(0, 51, 160, 0.1);
-            margin-bottom: 20px;
+            background: rgba(241, 245, 249, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 25px;
         }
 
-        .search-container { max-width: 900px; margin: 0 auto; padding: 0 15px; }
-        .search-bar { 
-            border-radius: 10px; 
-            border: 2px solid var(--chile-azul); 
+        .search-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
+        .search-input { 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
             padding: 12px 20px; 
             font-size: 1rem; 
             width: 100%;
-            transition: 0.2s;
-            background: white;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .search-bar:focus { border-color: var(--chile-rojo); box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.15); outline: none; }
-
-        /* Cabecera de listado (Solo PC) */
-        .list-header { 
-            display: flex; 
-            padding: 8px 20px; 
-            font-size: 0.75rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            color: var(--chile-azul); 
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--chile-azul);
-            margin-bottom: 10px;
+        .search-input:focus { 
+            border-color: var(--accent-blue); 
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); 
+            outline: none; 
         }
-        .list-icon { font-size: 1rem; margin-right: 4px; }
 
-        /* Fila de producto */
-        .item-row { 
-            background: white; 
+        /* --- CONTENEDOR PRINCIPAL Y TARJETAS --- */
+        .main-wrapper { max-width: 850px; margin: 0 auto; padding: 0 15px; }
+
+        .item-card { 
+            background: var(--bg-card); 
             border-radius: 8px; 
-            padding: 15px 20px; 
-            margin-bottom: 8px; 
-            border: 1px solid var(--borde);
-            border-left: 4px solid var(--chile-azul); /* Detalle azul en cada tarjeta */
+            padding: 20px; 
+            margin-bottom: 12px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            gap: 20px;
+        }
+        .item-card:hover { 
+            border-color: #cbd5e1; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+        }
+        .row-empty { opacity: 0.7; background: #f8fafc; }
+
+        /* Columna Izquierda: Información Técnica */
+        .info-col { flex: 1; display: flex; flex-direction: column; }
+        
+        /* Marca (Discreta y Pequeña) */
+        .brand-badge {
+            align-self: flex-start;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        /* Tipo de Repuesto */
+        .type-text {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Apartado Modelo / Referencia */
+        .tech-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .detail-row {
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-right: 6px;
+            display: inline-block;
+            width: 75px; /* Alineación perfecta */
+        }
+        .model-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .ref-value {
+            font-family: monospace;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Columna Derecha: Precio y Stock */
+        .meta-col { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end; 
+            gap: 8px; 
+            min-width: 140px;
+        }
+        
+        .price-display { 
+            font-size: 1.6rem; 
+            font-weight: 800; 
+            color: var(--text-main); 
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .stock-indicator {
+            font-size: 0.75rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            transition: 0.15s;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .item-row:hover { border-color: var(--chile-azul); box-shadow: 0 4px 8px rgba(0,0,0,0.08); transform: translateY(-1px); }
+        .stock-high { color: var(--stock-in); }
+        .stock-med { color: var(--stock-low); }
+        .stock-zero { color: var(--stock-out); }
 
-        /* Estados de Stock */
-        .no-stock { background-color: #fff1f2 !important; border-color: #fecdd3 !important; border-left-color: var(--chile-rojo) !important; opacity: 0.9;}
-        .badge-agotado { background: var(--chile-rojo); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
-        .badge-stock { background: #eff6ff; color: var(--chile-azul); padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; border: 1px solid #bfdbfe; }
+        .loader-msg { text-align: center; padding: 50px; font-size: 1rem; color: var(--text-secondary); font-weight: 600;}
 
-        /* Sistema de Columnas Base (PC) */
-        .col-main { flex: 2.5; }
-        .col-desc { flex: 4; padding: 0 15px; } 
-        .col-footer { flex: 3; display: flex; align-items: center; } 
-        .col-stock { flex: 1; text-align: center; }
-        .col-price { flex: 1; text-align: right; }
-
-        /* Tipografía */
-        .badge-brand { 
-            background: #f1f5f9; color: #334155; 
-            font-size: 0.65rem; font-weight: 800; 
-            padding: 2px 6px; border-radius: 4px; 
-            text-transform: uppercase; margin-right: 5px;
-        }
-        .product-sku { font-size: 0.65rem; color: #64748b; font-family: monospace; font-weight: 600;}
-        .item-name { font-weight: 800; font-size: 1.05rem; color: #0f172a; display: block; line-height: 1.2; margin-top: 4px; }
-        .item-desc { font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.3; }
-        .price-text { font-size: 1.3rem; font-weight: 900; color: var(--chile-rojo); } /* Precios en rojo para destacar */
-
-        .status-msg { text-align: center; padding: 30px; font-size: 1rem; color: #64748b; font-weight: 600;}
-
-        /* --- OPTIMIZACIÓN PARA MÓVILES --- */
-        @media (max-width: 992px) {
-            .header-app { padding: 1.2rem 0; }
-            .brand-title { font-size: 1.8rem; }
-            .sticky-search-wrapper { padding: 10px 0; margin-bottom: 15px; }
-            .search-bar { padding: 10px 15px; font-size: 0.95rem; }
-            
-            .list-header { display: none; }
-            
-            .item-row { flex-direction: column; align-items: flex-start; padding: 12px 15px; gap: 6px; }
-            .col-main { width: 100%; }
-            .col-desc { width: 100%; padding: 0; }
-            .item-name { font-size: 1rem; } 
-            .item-desc { font-size: 0.8rem; }
-            
-            .col-footer { 
+        /* --- MÓVILES --- */
+        @media (max-width: 768px) {
+            .header-pro { padding: 1.5rem 0 1rem 0; }
+            .header-title { font-size: 1.8rem; }
+            .item-card { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                padding: 16px; 
+                gap: 16px; 
+            }
+            .meta-col { 
                 width: 100%; 
-                display: flex; 
+                flex-direction: row; 
                 justify-content: space-between; 
                 align-items: center; 
-                border-top: 1px dashed var(--borde); 
-                padding-top: 8px; 
-                margin-top: 4px; 
+                border-top: 1px solid var(--border-color); 
+                padding-top: 12px; 
             }
-            .col-stock, .col-price { text-align: left; }
-            .col-price { text-align: right; }
+            .price-display { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-<header class="header-app">
+<header class="header-pro">
     <div class="container">
-        <h1 class="brand-title">🇨🇱 FULL CELL CALAMA 🇨🇱</h1>
-        <p class="subtitle mb-0">SISTEMA DE INVENTARIO - EDICIÓN FIESTAS PATRIAS 🥟🪁</p>
+        <h1 class="header-title">FULL CELL</h1>
+        <div class="header-address">
+            📍 Vargas 2054, Calama
+            <span id="globalStoreStatus" class="store-badge store-closed" style="display:none;"></span>
+        </div>
     </div>
 </header>
 
-<div class="sticky-search-wrapper">
-    <div class="container search-container">
-        <input type="text" id="searchInput" class="form-control search-bar shadow-sm" placeholder="🔍 Buscar código o repuesto (¡Viva Chile!)..." autocomplete="off">
+<div class="sticky-search">
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Buscar por modelo, referencia o tipo de repuesto..." autocomplete="off">
     </div>
 </div>
 
-<main class="container mb-5" style="max-width: 1000px;">
-    <div class="list-header d-none d-lg-flex">
-        <div class="col-main"><span class="list-icon">⭐</span> Modelo / Referencia</div>
-        <div class="col-desc"><span class="list-icon">🪁</span> Detalle Técnico</div>
-        <div class="col-footer">
-            <div class="col-stock"><span class="list-icon">📦</span> Disponibilidad</div>
-            <div class="col-price"><span class="list-icon">🇨🇱</span> Precio Neto</div>
-        </div>
-    </div>
-
-    <div id="inventoryList">
-        <div class="status-msg">⏳ Preparando la parrilla de datos...</div>
+<main class="main-wrapper mb-5">
+    <div id="inventoryContainer">
+        <div class="loader-msg">Sincronizando base de datos corporativa...</div>
     </div>
 </main>
 
 <script>
-    // Tu enlace intacto
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSs_mhwS-Op3r7iDRB3UZutQc8m5_oe5uDUqHzwbLOmHcsOm6uPtm_nYVQgwb9t1tjIWZ2waAnRlTJA/pub?output=csv'; 
 
-    let inventory = [];
+    let inventoryData = [];
 
-    function loadInventory() {
+    // LÓGICA DE EXTRACCIÓN (Tipo y Modelo separados)
+    function parseProductStructure(nombreBruto) {
+        if (!nombreBruto) return { tipo: 'REPUESTO', modelo: 'Desconocido' };
+        const parts = nombreBruto.trim().split(' ');
+        const tipo = parts[0].toUpperCase();
+        const modelo = parts.slice(1).join(' ');
+        return { tipo, modelo: modelo || nombreBruto };
+    }
+
+    // LÓGICA DE STOCK PROFESIONAL
+    function getFormalStock(qty) {
+        if (qty === 0) return { class: 'stock-zero', text: 'Sin Stock' };
+        if (qty <= 3) return { class: 'stock-med', text: `Stock Bajo: ${qty}` };
+        return { class: 'stock-high', text: `Disponible: ${qty}` };
+    }
+
+    function loadDatabase() {
         Papa.parse(SHEET_CSV, {
             download: true,
             header: false,
             skipEmptyLines: true,
             complete: function(results) {
-                const filas = results.data.slice(1);
+                const filas = results.data;
                 
-                inventory = filas.map(c => {
+                // LECTURA DE ESTADO DEL LOCAL (Columna G, Fila 2 del Excel)
+                if(filas[1] && filas[1][6]) {
+                    const statusVal = filas[1][6].toUpperCase().trim();
+                    const statusBadge = document.getElementById('globalStoreStatus');
+                    statusBadge.style.display = 'flex';
+                    if(statusVal === 'ABIERTO') {
+                        statusBadge.className = 'store-badge store-open';
+                        statusBadge.innerText = 'Abierto';
+                    } else {
+                        statusBadge.className = 'store-badge store-closed';
+                        statusBadge.innerText = 'Cerrado';
+                    }
+                }
+
+                // Procesar Inventario
+                inventoryData = filas.slice(1).map(c => {
                     return {
-                        codigo: c[0] ? c[0].trim() : 'S/N',
-                        nombre: c[1] ? c[1].trim() : 'Producto sin nombre',
+                        codigo: c[0] ? c[0].trim() : 'N/A',
+                        nombreRaw: c[1] ? c[1].trim() : '',
                         precio: c[2] ? c[2].trim() : '$0',
-                        desc: c[3] ? c[3].trim() : '-',
                         marca: c[4] ? c[4].trim() : '',
                         stock: parseInt(c[5]) || 0
                     };
-                }).filter(item => item.nombre !== 'Producto sin nombre' && item.nombre !== '');
+                }).filter(item => item.nombreRaw !== '');
 
-                render(inventory);
+                // ORDENAR: Por Nombre de Repuesto (Alfabético)
+                inventoryData.sort((a, b) => a.nombreRaw.localeCompare(b.nombreRaw));
+
+                renderLayout(inventoryData);
             },
-            error: function(error) {
-                document.getElementById('inventoryList').innerHTML = `<div class="status-msg" style="color: var(--chile-rojo);">❌ Pucha, hubo un error leyendo el archivo.</div>`;
+            error: function() {
+                document.getElementById('inventoryContainer').innerHTML = `<div class="loader-msg text-danger">Error de conexión con el servidor.</div>`;
             }
         });
     }
 
-    function render(list) {
-        const container = document.getElementById('inventoryList');
+    function renderLayout(list) {
+        const container = document.getElementById('inventoryContainer');
         if (list.length === 0) {
-            container.innerHTML = `<div class="status-msg">No se encontraron artículos con esa búsqueda.</div>`;
+            container.innerHTML = `<div class="loader-msg">No se encontraron coincidencias.</div>`;
             return;
         }
 
         container.innerHTML = list.map(item => {
-            const hasStock = item.stock > 0;
+            const structure = parseProductStructure(item.nombreRaw);
+            const stockInfo = getFormalStock(item.stock);
+            const isEmptyClass = item.stock === 0 ? 'row-empty' : '';
+
             return `
-                <div class="item-row ${!hasStock ? 'no-stock' : ''}">
+                <div class="item-card ${isEmptyClass}">
                     
-                    <div class="col-main">
-                        <div style="display: flex; align-items: center; margin-bottom: 2px;">
-                            ${item.marca ? `<span class="badge-brand">${item.marca}</span>` : ''}
-                            <span class="product-sku">REF: ${item.codigo}</span>
+                    <!-- COLUMNA IZQUIERDA: Info Técnica -->
+                    <div class="info-col">
+                        <!-- Marca Discreta (Solo si existe) -->
+                        ${item.marca ? `<div class="brand-badge">${item.marca}</div>` : ''}
+                        
+                        <div class="type-text">${structure.tipo}</div>
+                        
+                        <!-- Apartado Específico Modelo / Referencia -->
+                        <div class="tech-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Modelo:</span>
+                                <span class="model-value">${structure.modelo}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Referencia:</span>
+                                <span class="ref-value">${item.codigo}</span>
+                            </div>
                         </div>
-                        <span class="item-name">${item.nombre}</span>
                     </div>
 
-                    <div class="col-desc">
-                        <p class="item-desc">${item.desc}</p>
-                    </div>
-
-                    <div class="col-footer">
-                        <div class="col-stock">
-                            <span class="${hasStock ? 'badge-stock' : 'badge-agotado'}">
-                                ${hasStock ? item.stock + ' UNID' : 'AGOTADO'}
-                            </span>
-                        </div>
-                        <div class="col-price">
-                            <span class="price-text">${item.precio}</span>
+                    <!-- COLUMNA DERECHA: Precio y Stock -->
+                    <div class="meta-col">
+                        <div class="price-display">${item.precio}</div>
+                        <div class="stock-indicator ${stockInfo.class}">
+                            ${stockInfo.text}
                         </div>
                     </div>
 
@@ -239,18 +380,18 @@
         }).join('');
     }
 
+    // Buscador
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase().trim();
-        const filtered = inventory.filter(i => 
-            i.nombre.toLowerCase().includes(term) || 
+        const filtered = inventoryData.filter(i => 
+            i.nombreRaw.toLowerCase().includes(term) || 
             i.codigo.toLowerCase().includes(term) ||
-            i.desc.toLowerCase().includes(term) ||
             i.marca.toLowerCase().includes(term)
         );
-        render(filtered);
+        renderLayout(filtered);
     });
 
-    loadInventory();
+    loadDatabase();
 </script>
 
 </body>
