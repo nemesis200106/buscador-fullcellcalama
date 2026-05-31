@@ -296,9 +296,10 @@
             complete: function(results) {
                 const filas = results.data;
                 
-                // LECTURA DE ESTADO DEL LOCAL (Columna G, Fila 2 del Excel)
-                if(filas[1] && filas[1][6]) {
-                    const statusVal = filas[1][6].toUpperCase().trim();
+                // --- LECTURA DE ESTADO DEL LOCAL (Columna H, Fila 1 del Excel) ---
+                // filas[0] es la fila 1, y [7] es la columna H (A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7)
+                if(filas[0] && filas[0][7]) {
+                    const statusVal = filas[0][7].toUpperCase().trim();
                     const statusBadge = document.getElementById('globalStoreStatus');
                     statusBadge.style.display = 'flex';
                     if(statusVal === 'ABIERTO') {
@@ -310,7 +311,7 @@
                     }
                 }
 
-                // Procesar Inventario
+                // Procesar Inventario (Omitimos la primera fila que son encabezados)
                 inventoryData = filas.slice(1).map(c => {
                     return {
                         codigo: c[0] ? c[0].trim() : 'N/A',
